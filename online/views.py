@@ -15,6 +15,7 @@ class UserForm(forms.Form):
 
 
 #注册
+@ensure_csrf_cookie
 def regist(req):
     if req.method == 'POST':#当提交表单时
         uf = UserForm(req.POST)#form 包含提交的数据
@@ -27,9 +28,11 @@ def regist(req):
             return HttpResponse('regist success!!')
     else:#当正常访问时
        uf = UserForm()
-    return render_to_response('regist.html',{'uf':uf})
+    #return render_to_response('regist.html',{'uf':uf})
+    return render(req,'regist.html', {'uf': uf})
 
 #登陆
+@ensure_csrf_cookie
 def login(req):
     if req.method == 'POST':
         uf = UserForm(req.POST)
@@ -50,12 +53,15 @@ def login(req):
                 return HttpResponseRedirect('/online/login/')
     else:
         uf = UserForm()
-    return render_to_response('login.html',{'uf':uf})
+    #return render_to_response('login.html',{'uf':uf})
+    return render(req, 'login.html', {'uf': uf})
 
 #登陆成功
+@ensure_csrf_cookie
 def index(req):
     username = req.COOKIES.get('username','')
-    return render_to_response('index.html' ,{'username':username})
+    #return render_to_response('index.html' ,{'username':username})
+    return render(req, 'index.html', {'username': username})
 
 #退出
 @ensure_csrf_cookie
